@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================= -->
+    <!-- Maintenance Request Tree View -->
+    <!-- ================================================= -->
+
+    <record id="view_maintenance_request_tree" model="ir.ui.view">
+        <field name="name">maintenance.request.tree</field>
+        <field name="model">maintenance.request</field>
+        <field name="arch" type="xml">
+            <tree string="Maintenance Requests">
+
+                <field name="name"/>
+                <field name="lease_id"/>
+                <field name="issue_type"/>
+                <field name="urgency"/>
+                <field name="description"/>
+                <field name="tenant_id"/>
+                <field name="assigned_to"/>
+
+            </tree>
+        </field>
+    </record>
+
+
+    <!-- ================================================= -->
+    <!-- Maintenance Request Form View -->
+    <!-- ================================================= -->
+
+    <record id="view_maintenance_request_form" model="ir.ui.view">
+        <field name="name">maintenance.request.form</field>
+        <field name="model">maintenance.request</field>
+        <field name="arch" type="xml">
+
+            <form string="Maintenance Request">
+
+                <sheet>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+
+                    <group string="Maintenance Request Data">
+
+                        <group>
+                            <field name="lease_id"/>
+                            <field name="issue_type"/>
+                            <field name="assigned_to"/>
+                        </group>
+
+                        <group>
+                            <field name="urgency"/>
+                        </group>
+
+                    </group>
+
+                    <notebook>
+
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+
+            </form>
+
+        </field>
+    </record>
+
+
+    <!-- ================================================= -->
+    <!-- Maintenance Request Action -->
+    <!-- ================================================= -->
+
+    <record id="action_maintenance_request" model="ir.actions.act_window">
+        <field name="name">Maintenance Requests</field>
+        <field name="res_model">maintenance.request</field>
+        <field name="view_mode">tree,form</field>
+
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first maintenance request
+            </p>
+        </field>
+
+    </record>
+
+
+    <!-- ================================================= -->
+    <!-- Maintenance Request Menu -->
+    <!-- ================================================= -->
+
+    <menuitem
+        id="menu_maintenance_request"
+        name="Maintenance Requests"
+        action="action_maintenance_request"
+        sequence="30"/>
+
+</odoo>
+
+
+
+
+
+
+

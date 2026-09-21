@@ -21,6 +21,7 @@ class Tenant(models.Model):
         ('B', '20-40'),
         ('C', '40-60'),
         ])
+    user_id = fields.Many2one('res.users', string='Related User', index=True)
     def update_notes (self):
         """Updating"""
         for record in self:

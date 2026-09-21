@@ -26,15 +26,22 @@ Long description of module's purpose
                 ],
 
     # always loaded
-    'data': [
-        'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
-        'views/property_views.xml',
-        'views/tenant_view.xml',
-        'views/menu.xml'
-        
-    ],
+'data': [
+    'security/security_property.xml',
+    'security/ir.model.access.csv',
+    'data/ir_sequence_data.xml',
+    'views/views.xml',
+    'views/templates.xml',
+    'wizard/maintainance.xml',
+    'wizard/tenant.xml',
+    'wizard/lease.xml',          
+    'views/property_views.xml', 
+    'views/tenant_view.xml',
+    'views/lease_view.xml',
+    'views/crm_lead.xml',
+    'views/maintainance.xml',
+    'views/menu.xml'
+],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
