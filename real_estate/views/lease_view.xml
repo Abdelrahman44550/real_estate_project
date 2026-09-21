@@ -27,6 +27,7 @@
                 <field name="state" widget="statusbar" ></field>
                 <button name="convert_to_active" string="Active" type="object" invisible="state == 'active'" class="oe_highlight"/>
                 <button name="convert_to_draft" string="Draft" type="object" invisible="state == 'draft'" class="oe_highlight"/>
+                <button name="make_maintainance_request" string="Make Maintainance Request" type="object" class="oe_highlight"/>
                 <button name="%(real_estate.action_maintenance_request_wizard)d" string="Maintenance Request" type="action" context="{'default_lease_id': active_id}" invisible="state != 'active'"/>
             </header> 
                 <sheet>
@@ -44,11 +45,16 @@
                             <field name="property_id"/>
                             <field name="tenant_id"/>
                             <field name="user_id"/>
+                            <field name="deposit_paid"/>
+                            <field name="total_cost"/>
                         </group>
                         <group>
                             <field name="start_date"/>
                             <field name="end_date"/>
                             <field name="monthly_rent"/>
+                            <field name="duration_months"/>
+                            <field name="is_active"/>
+                            <field name="electricity_recharge"/>
                         </group>
 
                     </group>

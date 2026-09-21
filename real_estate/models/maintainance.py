@@ -68,7 +68,7 @@ class MaintenanceRequest(models.Model):
         ('other', 'Other')
     ],
         string='Issue Type',
-        required=True
+
     )
 
     description = fields.Text(
@@ -84,8 +84,7 @@ class MaintenanceRequest(models.Model):
         ('emergency', 'Emergency')
     ],
         string='Urgency',
-        default='medium',
-        required=True
+        default='medium'
     )
 
     preferred_date = fields.Date(
@@ -104,6 +103,6 @@ class MaintenanceRequest(models.Model):
         ('cancelled', 'Cancelled')
     ],
         string='Status',
-        default='draft',
-        required=True
+        default='draft'
     )
+    actual_cost = fields.Float(string='Actual Cost')

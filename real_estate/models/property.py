@@ -73,6 +73,7 @@ class Property(models.Model):
             record.write({'description': record.agent_id.login})
 
 
+
     # def write(self, vals):        
     #     if vals.get('available')==False:
     #         if 'bedroom' in vals:

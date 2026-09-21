@@ -38,5 +38,6 @@
         <field name="res_model">lease.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
+        
     </record>
 </odoo>

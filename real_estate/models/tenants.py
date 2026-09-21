@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from datetime import datetime, timedelta
 
 class Tenant(models.Model):
     _name = 'real_estate.tenant'
@@ -21,7 +22,9 @@ class Tenant(models.Model):
         ('B', '20-40'),
         ('C', '40-60'),
         ])
+    age = fields.Integer(string='Tenants Age', store=True)
     user_id = fields.Many2one('res.users', string='Related User', index=True)
+    
     def update_notes (self):
         """Updating"""
         for record in self:
@@ -31,5 +34,25 @@ class Tenant(models.Model):
             if record.crm_id.website:
                 record.write({'notes':record.crm_id.website})
             else:
-                record.write({'notes':record.crm_id.email_from})           
+                record.write({'notes':record.crm_id.email_from})       
+     
+
+    @api.onchange('date_of_birth')
+    def _compute_age(self):
+
+        today = fields.Date.today()
+
+        for record in self:
+            if record.date_of_birth:
+                record.age = (
+                    today.year
+                    -record.date_of_birth.year
+                    - (
+                        (today.month , today.day)
+                        < (record.date_of_birth.month, record.date_of_birth.day)
+                    )
+                )
+            else:
+                record.age = 0
+
 

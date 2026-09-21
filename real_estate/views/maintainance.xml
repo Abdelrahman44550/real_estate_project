@@ -53,6 +53,8 @@
 
                         <group>
                             <field name="urgency"/>
+                            <field name="preferred_date"/>
+                            <field name="actual_cost"/>
                         </group>
 
                     </group>
