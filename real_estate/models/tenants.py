@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 from datetime import datetime, timedelta
+from odoo.exceptions import UserError, ValidationError
 
 class Tenant(models.Model):
     _name = 'real_estate.tenant'
@@ -24,6 +25,17 @@ class Tenant(models.Model):
         ])
     age = fields.Integer(string='Tenants Age', store=True)
     user_id = fields.Many2one('res.users', string='Related User', index=True)
+    property_type = fields.Selection([
+    ('apartment', 'Apartment'),
+    ('house', 'House'),
+    ('villa', 'Villa'),
+    ('commercial', 'Commercial')
+    ], string='Property Type')
+    lead_id = fields.Many2one(
+    'crm.lead',
+    string='CRM Lead',
+    index=True
+    )
     
     def update_notes (self):
         """Updating"""
@@ -55,4 +67,16 @@ class Tenant(models.Model):
             else:
                 record.age = 0
 
+    @api.constrains('date_of_birth')
+    def _check_age(self):
+        """Ensure age is envalid"""
+        for record in self:
+            if record.date_of_birth:
+                if record.date_of_birth > fields.Date.today():
+                    raise UserError("Age cannot be negative")
 
+
+
+    _sql_constraints = [
+        ('email_unique', 'UNIQUE(email)', 'Email must be unique! This email is already registered.'),
+    ]

@@ -10,3 +10,4 @@ access_maintainance_wizard,maintainance.wizard,model_maintenance_request_wizard,
 access_lease_wizard,lease.wizard,model_lease_wizard,,1,1,1,1
 access_tenant_wizard,tenant.wizard,model_tenant_wizard,,1,1,1,1
 access_maintainance_user,maintainance.user,model_maintenance_request,maintainance_group,1,1,1,1
+access_payment_manager,payment.manager,model_lease_payment,,1,1,1,1

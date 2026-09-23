@@ -29,7 +29,8 @@
 # from odoo import models, fields
 
 
-from odoo import models, fields
+from odoo import models, fields 
+from datetime import timedelta
 
 
 class MaintenanceRequest(models.Model):
@@ -106,3 +107,12 @@ class MaintenanceRequest(models.Model):
         default='draft'
     )
     actual_cost = fields.Float(string='Actual Cost')
+    def _cron_emergency_request(self):
+        """Scheduled action - make emergency requests for the next day"""
+        
+        requests = self.search([
+            ('urgency', '=', 'emergency')
+        ])
+        tomorrow = fields.Date.today() + timedelta(days=1)
+        for request in requests:
+            request.write({'preferred_date': tomorrow})

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Payment List View (Tree) -->
+    <record id="view_payment_tree" model="ir.ui.view">
+        <field name="name">lease.payment.tree</field>
+        <field name="model">lease.payment</field>
+        <field name="arch" type="xml">
+            <tree string="Payments">
+                <field name="name"/>
+                <field name="lease_id"/>
+                <field name="amount"/>
+                <field name="payment_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Payment Form View -->
+    <record id="view_payment_form" model="ir.ui.view">
+        <field name="name">lease.payment.form</field>
+        <field name="model">lease.payment</field>
+        <field name="arch" type="xml">
+            <form string="Payment">
+            <header>
+                <field name="state" widget="statusbar" statusbar_visible="draft,pending,paid,reconciled"/>
+            </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Payment ID"/>
+                        </h1>
+                    </div>
+       
+                    <group string="Payment Data">
+                        <group>
+                          
+                            <field name="lease_id"/>
+                            <field name="amount"/>
+                            <field name="payment_date"/>
+                            <field name="property_id"/>
+                            <field name="tenant_id"/>
+                            <field name="due_date"/>
+                        </group>
+
+                        <group>
+
+                            <field name="payment_method"/>
+                            <field name="late_fee"/>
+                            <field name="late_fee_applied"/>
+                        </group>
+
+                        <notebook>
+                            <page string="Notes">
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="ir_cron_auto_paid_payments" model="ir.cron">
+        <field name="name">Real Estate: Auto Mark Payments as Paid</field>
+        <field name="model_id" ref="model_lease_payment"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_auto_paid_payments()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
+
+    <!-- Payment Action (Links views together) -->
+    <record id="action_payment" model="ir.actions.act_window">
+        <field name="name">Payments</field>
+        <field name="res_model">lease.payment</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first payment
+            </p>
+        </field>
+    </record>
+
+</odoo>

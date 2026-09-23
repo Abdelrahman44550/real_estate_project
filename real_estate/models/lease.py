@@ -68,7 +68,41 @@ class Lease(models.Model):
     compute='_compute_other_cost',
     store=True
     )
-
+    total_cash_amount = fields.Float(
+    string='Total Cash Amount',
+    compute='_compute_payments_methods',
+    store=True
+    )
+    total_check_amount = fields.Float(
+    string='Total Check Amount',
+    compute='_compute_payments_methods',
+    store=True
+    )
+    total_bank_transfer_amount = fields.Float(
+    string='Total Bank Transfer Amount',
+    compute='_compute_payments_methods',
+    store=True
+    )
+    total_credit_card_amount = fields.Float(
+    string='Total Credit Card Amount',
+    compute='_compute_payments_methods',
+    store=True
+    )
+    total_other_amount = fields.Float(
+    string='Total other Amount',
+    compute='_compute_payments_methods',
+    store=True
+    )
+    total_amount = fields.Float(
+    string='Total  Amount',
+    compute='_compute_payments_methods',
+    store=True
+    )
+    payment_ids = fields.One2many(
+        'lease.payment',
+        'lease_id',
+        string='Payments'
+    )
 
                                     
 
@@ -90,10 +124,10 @@ class Lease(models.Model):
     def copy(self, default=None):
         raise UserError("You Can't Duplicate This Lease")
 
-    def write(self,vals):
-        if not self.env.user.has_group('real_estate.group_lease_manager'):
-            raise UserError("You Can't Edit This Lease")
-        return super(Lease, self).write(vals)
+    # def write(self,vals):
+    #     if not self.env.user.has_group('real_estate.group_lease_manager'):
+    #         raise UserError("You Can't Edit This Lease")
+    #     return super(Lease, self).write(vals)
     def unlink(self):
         if not self.env.user.has_group('real_estate.group_lease_manager'):
             raise UserError("You Can't Delete This Lease")
@@ -233,6 +267,57 @@ class Lease(models.Model):
                 if maintenance.issue_type == 'other'
         )
 
-              
-        
-        
+    @api.depends('payment_ids.amount', 'payment_ids.payment_method')         
+    def _compute_payments_methods(self):
+
+        for record in self:
+
+            costs = {
+                type_name: sum(
+                    record.payment_ids.filtered(
+                        lambda payment: payment.payment_method == type_name
+                    ).mapped('amount')
+                )
+                for type_name in [
+                    'cash',
+                    'credit_card',
+                    'bank_transfer',
+                    'check',
+                    'other'
+                ]
+            }
+
+            record.total_cash_amount = costs['cash']
+            record.total_credit_card_amount = costs['credit_card']
+            record.total_bank_transfer_amount = costs['bank_transfer']
+            record.total_check_amount = costs['check']
+            record.total_other_amount = costs['other']
+            record.total_amount = sum(
+                record.payment_ids.mapped('amount')
+        )
+    def _cron_auto_expire_leases(self):
+        """Scheduled action - expire leases whose end date has passed"""
+        today = fields.Date.today()
+        expired_leases = self.search([
+            ('end_date', '<', today),
+        ])
+        for lease in expired_leases:
+            lease.write({'state': 'expired'})
+                # === VALIDATION ===
+    @api.constrains('start_date', 'end_date')
+    def _check_dates(self):
+        """Ensure end date is after start date"""
+        for record in self:
+            if record.start_date and record.end_date:
+                if record.end_date <= record.start_date:
+                    raise ValidationError("End date must be after start date")
+
+
+    @api.constrains('deposit_paid', 'monthly_rent')
+    def _check_deposit_paid(self):
+        """Ensure deposit paid does not exceed monthly rent"""
+        for record in self:
+            if record.deposit_paid > record.monthly_rent:
+                raise ValidationError(
+                    "Deposit Paid cannot be greater than Monthly Rent."
+                )
