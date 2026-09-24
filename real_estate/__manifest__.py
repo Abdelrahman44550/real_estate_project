@@ -31,7 +31,7 @@ Long description of module's purpose
     'security/ir.model.access.csv',
     'data/ir_sequence_data.xml',
     'views/views.xml',
-    'views/templates.xml',
+    # 'views/templates.xml',
     'wizard/maintainance.xml',
     'wizard/tenant.xml',
     'wizard/lease.xml',          
@@ -41,6 +41,9 @@ Long description of module's purpose
     'views/payment_view.xml',
     'views/crm_lead.xml',
     'views/maintainance.xml',
+    'views/portal_templates.xml',
+    'views/portal_templates_maintainance.xml',
+    'views/portal_templates_property.xml',
     'views/menu.xml'
 ],
     # only loaded in demonstration mode
