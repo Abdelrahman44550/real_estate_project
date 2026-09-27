@@ -27,6 +27,7 @@
                 <header>
                 <button name="update_notes" string="Update Notes" type="object" class="oe_highlight" groups="real_estate.group_tenant_manager"/>
                 <button name="get_lead" string="Get Lead Name" type="object" class="oe_highlight" groups="real_estate.group_tenant"/>
+                <button name="create_portal_user" string="Create Portal User" type="object" class="oe_highlight" invisible="user_id"/> 
                 </header>
                 <sheet>
 

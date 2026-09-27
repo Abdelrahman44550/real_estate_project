@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ========================================================= -->
+    <!-- Available Properties Page -->
+    <!-- ========================================================= -->
+
+    <template
+        id="portal_available_properties"
+        name="Portal - Available Properties"
+    >
+
+        <t t-call="portal.portal_layout">
+
+            <div class="container mt-4">
+
+                <!-- Page Title -->
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h1 class="mb-4">
+                            Available Properties
+                        </h1>
+                    </div>
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- Search / Filter Form -->
+                <!-- ================================================= -->
+
+                <div class="card mb-4">
+
+                    <div class="card-body">
+
+                        <form
+                            action="/my/available-properties"
+                            method="get"
+                        >
+
+                            <div class="row">
+
+                                <!-- Property Type -->
+                                <div class="col-md-3 mb-3">
+
+                                    <label
+                                        for="property_type"
+                                        class="form-label"
+                                    >
+                                        Property Type
+                                    </label>
+
+                                    <select
+                                        name="property_type"
+                                        id="property_type"
+                                        class="form-control"
+                                    >
+
+                                        <option value="">
+                                            All Types
+                                        </option>
+
+                                        <option
+                                            value="apartment"
+                                            t-att-selected="property_type == 'apartment'"
+                                        >
+                                            Apartment
+                                        </option>
+
+                                        <option
+                                            value="house"
+                                            t-att-selected="property_type == 'house'"
+                                        >
+                                            House
+                                        </option>
+
+                                        <option
+                                            value="villa"
+                                            t-att-selected="property_type == 'villa'"
+                                        >
+                                            Villa
+                                        </option>
+
+                                        <option
+                                            value="commercial"
+                                            t-att-selected="property_type == 'commercial'"
+                                        >
+                                            Commercial
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <!-- Min Price -->
+                                <div class="col-md-3 mb-3">
+
+                                    <label
+                                        for="min_price"
+                                        class="form-label"
+                                    >
+                                        Min Price
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        name="min_price"
+                                        id="min_price"
+                                        class="form-control"
+                                        t-att-value="min_price or ''"
+                                    />
+
+                                </div>
+
+
+                                <!-- Max Price -->
+                                <div class="col-md-3 mb-3">
+
+                                    <label
+                                        for="max_price"
+                                        class="form-label"
+                                    >
+                                        Max Price
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        name="max_price"
+                                        id="max_price"
+                                        class="form-control"
+                                        t-att-value="max_price or ''"
+                                    />
+
+                                </div>
+
+
+                                <!-- Min Bedrooms -->
+                                <div class="col-md-3 mb-3">
+
+                                    <label
+                                        for="min_bedrooms"
+                                        class="form-label"
+                                    >
+                                        Min Bedrooms
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        name="min_bedrooms"
+                                        id="min_bedrooms"
+                                        class="form-control"
+                                        t-att-value="min_bedrooms or ''"
+                                    />
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Search Button -->
+                            <div class="text-center">
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                >
+                                    Search
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- Available Properties -->
+                <!-- ================================================= -->
+
+                <div class="row">
+
+                    <t t-if="available_properties">
+
+                        <t
+                            t-foreach="available_properties"
+                            t-as="property"
+                        >
+
+                            <div class="col-md-6 col-lg-4 mb-4">
+
+                                <div class="card h-100 shadow-sm">
+
+                                    <div class="card-body">
+
+                                        <!-- Property Name -->
+                                        <h4 class="card-title mb-3">
+                                            <t t-esc="property.name"/>
+                                        </h4>
+
+
+                                        <!-- Property Type -->
+                                        <p class="mb-2">
+
+                                            <strong>
+                                                Property Type:
+                                            </strong>
+
+                                            <t
+                                                t-esc="property.property_type"
+                                            />
+
+                                        </p>
+
+
+                                        <!-- Monthly Rent -->
+                                        <p class="mb-2">
+
+                                            <strong>
+                                                Monthly Rent:
+                                            </strong>
+
+                                            <t
+                                                t-esc="property.price"
+                                            />
+
+                                        </p>
+
+
+                                        <!-- Bedrooms -->
+                                        <p class="mb-2">
+
+                                            <strong>
+                                                Bedrooms:
+                                            </strong>
+
+                                            <t
+                                                t-esc="property.bedrooms"
+                                            />
+
+                                        </p>
+
+
+                                        <!-- Deposit -->
+                                        <p class="mb-2">
+
+                                            <strong>
+                                                Deposit:
+                                            </strong>
+
+                                            <t
+                                                t-esc="property.deposit"
+                                            />
+
+                                        </p>
+
+
+                                        <!-- Availability -->
+                                        <p class="mb-3">
+
+                                            <strong>
+                                                Status:
+                                            </strong>
+
+                                            <span class="text-success">
+                                                Available
+                                            </span>
+
+                                        </p>
+
+
+                                        <!-- View Property Button -->
+                                        <a
+                                            t-att-href="'/property/%d/%s' % (
+                                                property.id,
+                                                property.name and
+                                                property.name.replace(
+                                                    ' ',
+                                                    '-'
+                                                ).lower() or ''
+                                            )"
+                                            class="btn btn-secondary"
+                                        >
+                                            View Property
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </t>
+
+                    </t>
+
+
+                    <!-- ================================================= -->
+                    <!-- No Properties -->
+                    <!-- ================================================= -->
+
+                    <t t-else="">
+
+                        <div class="col-12">
+
+                            <div
+                                class="alert alert-info text-center"
+                                role="alert"
+                            >
+                                No available properties match your search.
+                            </div>
+
+                        </div>
+
+                    </t>
+
+                </div>
+
+            </div>
+
+        </t>
+
+    </template>
+
+
+    <!-- ========================================================= -->
+    <!-- Portal Navbar - Properties -->
+    <!-- ========================================================= -->
+
+    <template
+        id="portal_available_properties_navbar"
+        name="Portal Navbar: Properties"
+        inherit_id="portal.frontend_layout"
+        priority="30"
+    >
+
+        <xpath
+            expr="//a[@href='/contactus']/parent::li"
+            position="before"
+        >
+
+            <li
+                role="presentation"
+                class="nav-item"
+            >
+
+                <a
+                    role="menuitem"
+                    href="/my/available-properties"
+                    class="nav-link"
+                >
+                    Properties
+                </a>
+
+            </li>
+
+        </xpath>
+
+    </template>
+
+</odoo>

@@ -75,3 +75,77 @@ class RealEstatePropertyPortal(CustomerPortal):
             'real_estate.portal_my_properties',
             values
         )
+
+
+    # =========================================
+    # Available Properties
+    # =========================================
+
+    @http.route(
+        ['/my/available-properties'],
+        type='http',
+        auth='user',
+        website=True
+    )
+    def portal_available_properties(
+        self,
+        property_type=None,
+        min_price=None,
+        max_price=None,
+        min_bedrooms=None,
+        **kw
+    ):
+
+        values = self._prepare_portal_layout_values()
+
+        # Start with available properties only
+        domain = [
+            ('available', '=', True)
+        ]
+
+        # Property Type
+        if property_type:
+            domain.append(
+                ('property_type', '=', property_type)
+            )
+
+        # Minimum Price
+        if min_price:
+            domain.append(
+                ('price', '>=', float(min_price))
+            )
+
+        # Maximum Price
+        if max_price:
+            domain.append(
+                ('price', '<=', float(max_price))
+            )
+
+        # Minimum Bedrooms
+        if min_bedrooms:
+            domain.append(
+                ('bedrooms', '>=', int(min_bedrooms))
+            )
+
+        # Search properties
+        properties = request.env[
+            'real_estate.property'
+        ].sudo().search(
+            domain,
+            order='create_date desc'
+        )
+
+        values.update({
+            'available_properties': properties,
+
+            # Keep filter values in the form
+            'property_type': property_type,
+            'min_price': min_price,
+            'max_price': max_price,
+            'min_bedrooms': min_bedrooms,
+        })
+
+        return request.render(
+            'real_estate.portal_available_properties',
+            values
+        )

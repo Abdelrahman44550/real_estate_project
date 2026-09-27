@@ -104,6 +104,9 @@ class Lease(models.Model):
         string='Payments'
     )
 
+    next_payment_date = fields.Date(string='Last Reminder Sent')
+    last_reminder_sent = fields.Date(string='Last Reminder Sent', readonly=True)
+
                                     
 
     def convert_to_active(self):
@@ -321,3 +324,27 @@ class Lease(models.Model):
                 raise ValidationError(
                     "Deposit Paid cannot be greater than Monthly Rent."
                 )
+    def send_reminder_email(self):
+        template_xml_id = 'real_estate.email_template_payment_upcoming'
+        if not template_xml_id:
+            return
+            
+        template = self.env.ref(template_xml_id, raise_if_not_found=False)
+        if not template:
+            return
+
+        for lease in self:
+            if not lease.tenant_id.email:
+                lease.message_post(body="Could not send reminder: Tenant has no email.")
+                continue
+            template.send_mail(lease.id, force_send=True)
+            lease.last_reminder_sent = fields.Date.today()
+    def _cron_send_upcoming_payment_reminders(self):
+        """Scheduled action - send reminders for upcoming payments"""
+        today = fields.Date.today()
+        upcoming_leases = self.search([
+            # ('state', '=', 'active'),
+            ('next_payment_date', '=', today + timedelta(days=1)),
+        ])
+        for lease in upcoming_leases:
+            lease.send_reminder_email()

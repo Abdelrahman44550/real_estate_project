@@ -40,10 +40,13 @@ Long description of module's purpose
     'views/lease_view.xml',
     'views/payment_view.xml',
     'views/crm_lead.xml',
+    'views/res_partners.xml',
     'views/maintainance.xml',
     'views/portal_templates.xml',
     'views/portal_templates_maintainance.xml',
     'views/portal_templates_property.xml',
+    'views/property_menu.xml',
+    'data/mail_template_data.xml',
     'views/menu.xml'
 ],
     # only loaded in demonstration mode

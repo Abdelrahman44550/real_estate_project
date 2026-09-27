@@ -29,7 +29,11 @@
 # from odoo import models, fields
 
 
-from odoo import models, fields 
+from tempfile import template
+
+import requests
+
+from odoo import models, fields , api
 from datetime import timedelta
 
 
@@ -116,3 +120,35 @@ class MaintenanceRequest(models.Model):
         tomorrow = fields.Date.today() + timedelta(days=1)
         for request in requests:
             request.write({'preferred_date': tomorrow})
+
+    maintenance_date = fields.Date(
+    string='Maintenance Date'
+    )
+
+    @api.model
+    def _cron_send_maintenance_reminders(self):
+        tomorrow = fields.Date.today() + timedelta(days=1)
+
+        requests = self.search([
+        ('preferred_date', '=', tomorrow),
+        ('assigned_to', '!=', False),
+        ])
+
+        template = self.env.ref(
+            'real_estate.email_template_maintenance_reminder',
+            raise_if_not_found=False
+    )
+
+        if not template:
+            return
+
+        for request in requests:
+            technician = request.assigned_to
+
+            if not technician.email:
+                continue
+
+            template.send_mail(
+                request.id,
+                force_send=True
+            )

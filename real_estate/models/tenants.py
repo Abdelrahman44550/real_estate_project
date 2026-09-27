@@ -9,7 +9,7 @@ class Tenant(models.Model):
     
     # === CORE FIELDS ===
     name = fields.Char(string='Tenant Name', required=True, index=True)
-    email = fields.Char(string='Email', required=True, index=True)
+    email = fields.Char(string='Email',  index=True)
     phone = fields.Char(string='Phone Number')
     mobile = fields.Char(string='Mobile Number')
     city = fields.Char(string='City')
@@ -80,3 +80,19 @@ class Tenant(models.Model):
     _sql_constraints = [
         ('email_unique', 'UNIQUE(email)', 'Email must be unique! This email is already registered.'),
     ]
+
+    def create_portal_user(self):
+        """Create Portal User From Tenant Page"""
+        for record in self:
+            if record.user_id:
+                raise UserError("This Tenant Already Has a Portal User")
+            if not record.email:
+                raise UserError("Tenant Must Have an Email to Create a Portal User")
+            portal_group = self.env.ref('base.group_portal')
+            user = self.env['res.users'].sudo().create({
+                'name': record.name,
+                'login': record.email,
+                'email': record.email,
+                'groups_id': [(6, 0, [portal_group.id])],
+            })
+            record.user_id = user.id

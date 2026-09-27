@@ -29,6 +29,7 @@
                 <button name="convert_to_draft" string="Draft" type="object" invisible="state == 'draft'" class="oe_highlight"/>
                 <button name="make_maintainance_request" string="Make Maintainance Request" type="object" class="oe_highlight"/>
                 <button name="%(real_estate.action_maintenance_request_wizard)d" string="Maintenance Request" type="action" context="{'default_lease_id': active_id}" invisible="state != 'active'"/>
+                <button name="send_reminder_email" string="Send Upcoming Payment Reminder" type="object" class="oe_highlight"/>
             </header> 
                 <sheet>
                     <div class="oe_title">
@@ -55,6 +56,7 @@
                             <field name="duration_months"/>
                             <field name="is_active"/>
                             <field name="electricity_recharge"/>
+                            <field name="next_payment_date"/>
                         </group>
 
                     </group>
@@ -96,6 +98,7 @@
                                         <field name="total_credit_card_amount"/>
                                         <field name="total_other_amount"/>
                                         <field name="total_amount"/>
+                                        
                                     </group>
 
                                 </group>
@@ -121,6 +124,18 @@
         <field name="doall" eval="False"/>
         <field name="active" eval="True"/>
     </record>
+
+    <record id="ir_cron_send_upcoming_payment_reminders" model="ir.cron">
+        <field name="name">Real Estate: Send Upcoming Payment Reminders</field>
+        <field name="model_id" ref="model_real_estate_lease"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_send_upcoming_payment_reminders()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+
+
     <!-- Lease Action (Links views together) -->
     <record id="action_lease" model="ir.actions.act_window">
         <field name="name">Leases</field>
